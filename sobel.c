@@ -60,33 +60,40 @@ void copy_offset(int** m1, int** m2) {
 
 int** sobel(int** matrix) {
 
-	int i, j, k, l;
-//	int** outcome = matrix_init(0);
+	int i, j, k, l, sumX, sumY, sum_all;
+	int** output = matrix_init(0);
 
-	int** Gx = matrix_init(0);
-	int** Gy = matrix_init(0);
+//	int** Gx = matrix_init(0);
+//	int** Gy = matrix_init(0);
 
 	int** copy_with_offset = matrix_init(2);
+
+
 
 	copy_offset(copy_with_offset, matrix);
 
 	for(i=1; i<=MAX_ROWS; i++) {
 		for(j=1; j<=MAX_COLUMNS; j++) {
 
+			sumX = sumY = 0;
 			for(k=-1; k<=1; k++) {
 				for(l=-1; l<=1; l++){
-					Gx[i-1][j-1] += copy_with_offset[k+i][l+j]*kernel_x[k+1][l+1];
-					Gy[i-1][j-1] += copy_with_offset[k+i][l+j]*kernel_y[k+1][l+1];
+					sumX += copy_with_offset[k+i][l+j]*kernel_x[k+1][l+1];
+					sumY += copy_with_offset[k+i][l+j]*kernel_y[k+1][l+1];
 				}
 			}
+
+			sum_all = abs(sumX) + abs(sumY);
+
+			if(sum_all > 255)
+				sum_all = 255;
+
+			else if(sum_all < 0)
+				sum_all = 0;
+
+			output[i-1][j-1] = sum_all;
 		}
 	}
 
-//	for(i=0; i<MAX_ROWS; i++) {
-//		for(j=0; j<MAX_COLUMNS; j++) {
-//			outcome[i][j] = Gx[i+1][j+1];
-//		}
-//	}
-
-	return Gx;
+	return output;
 }
