@@ -1,15 +1,16 @@
 #ifndef SOBEL_H
 #define SOBEL_H
 
-#define MAX_ROWS 4
-#define MAX_COLUMNS 4
+#define MAX_ROWS 3
+#define MAX_COLUMNS 3
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
-void print_matrix(int**);
+void print_matrix(char**);
 
-int** matrix_init(int);
-int** sobel(int**);
+char** matrix_init(int);
+char** sobel(char**);
 
 #endif
