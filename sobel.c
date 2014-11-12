@@ -12,7 +12,7 @@ int kernel_y[3][3] = {
 		{-1, -2, -1}
 };
 
-void print_matrix(int** m) {
+void print_matrix(char** m) {
 
 	int i, j;
 	for(i=0; i<MAX_ROWS; i++) {
@@ -23,8 +23,8 @@ void print_matrix(int** m) {
 	}
 }
 
-int** matrix_init(int of) {
-	int** matrix = malloc((MAX_ROWS + of) * sizeof(int*));
+char** matrix_init(int of) {
+	char** matrix = malloc((MAX_ROWS + of) * sizeof(char*));
 
 	if(!matrix) {
 		printf("Error malloc\n");
@@ -33,7 +33,7 @@ int** matrix_init(int of) {
 
 	int i, j;
 	for(i=0; i<MAX_ROWS+of; i++) {
-		if((matrix[i] = malloc((MAX_COLUMNS + of) * sizeof(int))) == NULL)  {
+		if((matrix[i] = malloc((MAX_COLUMNS + of) * sizeof(char))) == NULL)  {
 			printf("Error malloc\n");
 			exit(-1);
 		}
@@ -41,14 +41,14 @@ int** matrix_init(int of) {
 
 	for(i=0; i<MAX_ROWS+of; i++) {
 		for(j=0; j<MAX_COLUMNS+of; j++) {
-			matrix[i][j] = 0;
+			matrix[i][j] = '\0';
 		}
 	}
 
 	return matrix;
 }
 
-void copy_offset(int** m1, int** m2) {
+void copy_offset(char** m1, char** m2) {
 
 	int i, j;
 	for(i=0; i<MAX_ROWS; i++) {
@@ -58,17 +58,12 @@ void copy_offset(int** m1, int** m2) {
 	}
 }
 
-int** sobel(int** matrix) {
+char** sobel(char** matrix) {
 
 	int i, j, k, l, sumX, sumY, sum_all;
-	int** output = matrix_init(0);
+	char** output = matrix_init(0);
 
-//	int** Gx = matrix_init(0);
-//	int** Gy = matrix_init(0);
-
-	int** copy_with_offset = matrix_init(2);
-
-
+	char** copy_with_offset = matrix_init(2);
 
 	copy_offset(copy_with_offset, matrix);
 
@@ -78,8 +73,8 @@ int** sobel(int** matrix) {
 			sumX = sumY = 0;
 			for(k=-1; k<=1; k++) {
 				for(l=-1; l<=1; l++){
-					sumX += copy_with_offset[k+i][l+j]*kernel_x[k+1][l+1];
-					sumY += copy_with_offset[k+i][l+j]*kernel_y[k+1][l+1];
+					sumX += (int)copy_with_offset[k+i][l+j]*kernel_x[k+1][l+1];
+					sumY += (int)copy_with_offset[k+i][l+j]*kernel_y[k+1][l+1];
 				}
 			}
 
@@ -91,7 +86,7 @@ int** sobel(int** matrix) {
 			else if(sum_all < 0)
 				sum_all = 0;
 
-			output[i-1][j-1] = sum_all;
+			output[i-1][j-1] = (char)sum_all;
 		}
 	}
 
