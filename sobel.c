@@ -1,5 +1,7 @@
 #include "sobel.h"
 
+//just another random comment
+
 int kernel_x[3][3] = {
 		{-1, 0, 1},
 		{-2, 0, 2},
