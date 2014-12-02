@@ -1,4 +1,5 @@
 #include "sobel.h"
+#include "hough.h"
 
 int kernel_x[3][3] = {
 		{-1, 0, 1},
@@ -12,7 +13,7 @@ int kernel_y[3][3] = {
 		{-1, -2, -1}
 };
 
-void print_matrix(char** m) {
+void print_matrix(unsigned char** m) {
 
 	int i, j;
 	for(i=0; i<MAX_ROWS; i++) {
@@ -23,8 +24,8 @@ void print_matrix(char** m) {
 	}
 }
 
-char** matrix_init(int of) {
-	char** matrix = malloc((MAX_ROWS + of) * sizeof(char*));
+unsigned char** matrix_init(int of) {
+	unsigned char** matrix = malloc((MAX_ROWS + of) * sizeof(char*));
 
 	if(!matrix) {
 		printf("Error malloc\n");
@@ -48,7 +49,7 @@ char** matrix_init(int of) {
 	return matrix;
 }
 
-void copy_offset(char** m1, char** m2) {
+void copy_offset(unsigned char** m1, unsigned char** m2) {
 
 	int i, j;
 	for(i=0; i<MAX_ROWS; i++) {
@@ -58,12 +59,12 @@ void copy_offset(char** m1, char** m2) {
 	}
 }
 
-char** sobel(char** matrix) {
+unsigned char** sobel(unsigned char** matrix) {
 
 	int i, j, k, l, sumX, sumY, sum_all;
-	char** output = matrix_init(0);
+	unsigned char** output = matrix_init(0);
 
-	char** copy_with_offset = matrix_init(2);
+	unsigned char** copy_with_offset = matrix_init(2);
 
 	copy_offset(copy_with_offset, matrix);
 
@@ -89,6 +90,18 @@ char** sobel(char** matrix) {
 			output[i-1][j-1] = (char)sum_all;
 		}
 	}
+
+	for(i=0; i<MAX_ROWS; i++) {
+		for(j=0; j<MAX_COLUMNS; j++) {
+			if(output[i][j] < 50) {
+				output[i][j] = 0;
+			} else {
+				output[i][j] = 255;
+			}
+		}
+	}
+
+//	unsigned int** abc = hough(output, 512, 512);
 
 	return output;
 }
