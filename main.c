@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
 //    unsigned char** wynik1 = sobel(wynik);
 
     int** wynik_hough = hough(wynik, 512, 512);
+    int*** wynik_hough_circle = hough_circles(wynik, 512, 512);
 
     unsigned char** out;
     out = wynik;
@@ -44,6 +45,9 @@ int main(int argc, char **argv) {
 #endif
 
 
-	return 0;
+    clear_2(wynik, 512);
+    clear_2(wynik_hough, 512);
+    clear_3(wynik_hough_circle, 512, 512);
 
+	return 0;
 }

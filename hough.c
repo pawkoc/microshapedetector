@@ -3,12 +3,12 @@
 
 int** hough(unsigned char** sobel_output, int w, int h) {
 
-	int _accu_h = round(sqrt(2.0)*h);
+	int _accu_r = round(sqrt(2.0)*h);
 	int _accu_w = 180;
 
-	printf("Wymiar h: %d\n", _accu_h);
+	printf("Wymiar h: %d\n", _accu_r);
 
-	int** _accu = malloc(_accu_h * sizeof(int*));
+	int** _accu = malloc(_accu_r * sizeof(int*));
 
 	if(_accu == NULL) {
 		printf("nieudana alokacja\n");
@@ -16,7 +16,7 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 	}
 
 	int i;
-	for (i = 0; i < _accu_h; i++) {
+	for (i = 0; i < _accu_r; i++) {
 		_accu[i] = malloc(_accu_w * sizeof(int));
 
 		if(_accu[i] == NULL) {
@@ -26,13 +26,13 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 	}
 
 	int j;
-	for(i=0; i<_accu_h; i++) {
+	for(i=0; i<_accu_r; i++) {
 		for(j=0; j<_accu_w; j++){
 			_accu[i][j] = 0;
 		}
 	}
 
-	printf("accu_w: %d, accu_h: %d\n", _accu_w, _accu_h);
+	printf("accu_w: %d, accu_h: %d\n", _accu_w, _accu_r);
 
 	int licznik = 0;
 
@@ -50,7 +50,7 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 
 
 //					_accu[(int)((round(r + hough_h) * 180.0))][t]++;
-					int r_int = (int)r + _accu_h/2;
+					int r_int = (int)r + _accu_r/2;
 
 //					printf("OK %d <-- %lf\n", r_int, r);
 
@@ -64,7 +64,7 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 		}
 	}
 
-		for(i=0; i<_accu_h; i++) {
+		for(i=0; i<_accu_r; i++) {
 			for(j=0; j<_accu_w; j++){
 //				printf("%3d ", _accu[i][j]);
 				if(_accu[i][j] > 240) {
@@ -77,21 +77,120 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 	return _accu;
 }
 
-void reverse_hough(int** accu, int w, int h, int thr) {
+int*** hough_circles(int** sobel_output, int w, int h) {
 
-	unsigned char** output = matrix_init(0);
+	printf("Circles\n");
 
-	int x, y;
-	int r, t;
-	for (r = 0; r < h; r++) {
-		for (t = 0; t < w; t++) {
+	int _accu_r = round(MIN(h, w)/2);
+	int _accu_w = w;
+	int _accu_h = h;
 
-			if(accu[r][t] >= thr) {
+	printf("Wymiar r: %d\n", _accu_r);
 
+	int*** _accu = malloc(_accu_w * sizeof(int**));
 
+	if(_accu == NULL) {
+		printf("nieudana alokacja\n");
+		exit(-1);
+	}
 
+	int i, j, k;
+	for (i = 0; i < _accu_w; i++) {
+		_accu[i] = malloc(_accu_h * sizeof(int*));
+
+		if(_accu[i] == NULL) {
+			printf("nieudana alokacja\n");
+			exit(-1);
+		}
+
+		for(j = 0; j < _accu_h; j++) {
+			_accu[i][j] = malloc(_accu_r * sizeof(int));
+
+			if(_accu[i][j] == NULL) {
+				printf("nieudana alokacja\n");
+				exit(-1);
 			}
 		}
 	}
 
+	for(i = 0; i < _accu_w; i++) {
+		for(j = 0; j < _accu_h; j++) {
+			for(k = 0; k < _accu_r; k++) {
+				_accu[i][j][k] = 0;
+			}
+		}
+	}
+
+	int x, y, t, a, b, r;
+	for(a = 0; a < _accu_w; a++) {
+		for(b = 0; b < _accu_h; b++) {
+			for(r = 0; r < _accu_r; r++) {
+
+				for(t=0; t<180; t++) {
+
+					x = a + (r+1)*cos((double) t * DEG2RAD);
+					y = b + (r+1)*sin((double) t * DEG2RAD);
+
+					if(x>=0 && y>=0 && x<w && y<h && (int)sobel_output[x][y] > 240) {
+						_accu[a][b][r]++;
+					}
+		printf("%d\n", a);
+				}
+			}
+		}
+	}
+
+	for(i=0; i<_accu_w; i++) {
+		for(j=0; j<_accu_h; j++){
+			for(k=0; k<_accu_r; k++) {
+				if(_accu[i][j][k] > 100) {
+					printf("x: %3d, y: %3d, rad: %d\n", i, j, _accu[i][j][k]);
+				}
+			}
+		}
+	}
+
+	return _accu;
 }
+
+void clear_2(void** array, int w) {
+
+	int i;
+	for(i=0; i<w; i++) {
+		free(array[i]);
+	}
+
+	free(array);
+}
+
+void clear_3(void*** array, int w, int h) {
+
+	int i, j;
+	for(i=0; i<w; i++) {
+		for(j=0; j<h; j++) {
+			free(array[i][j]);
+		}
+		free(array[i]);
+	}
+
+	free(array);
+}
+
+//void reverse_hough(int** accu, int w, int h, int thr) {
+//
+//	unsigned char** output = matrix_init(0);
+//
+//	int x, y;
+//	int r, t;
+//	for (r = 0; r < h; r++) {
+//		for (t = 0; t < w; t++) {
+//
+//			if(accu[r][t] >= thr) {
+//
+//
+//
+//			}
+//		}
+//	}
+//
+//}
