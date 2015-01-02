@@ -194,11 +194,6 @@ int** hough(unsigned char** sobel_output, int w, int h) {
 	return _accu;
 }
 
-
-
-
-
-
 int*** hough_circles(int** sobel_output, int w, int h) {
 
 	printf("Circles\n");
