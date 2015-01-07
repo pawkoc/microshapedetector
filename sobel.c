@@ -1,8 +1,6 @@
 #include "sobel.h"
 #include "hough.h"
 
-//just another random comment
-
 int kernel_x[3][3] = {
 		{-1, 0, 1},
 		{-2, 0, 2},
@@ -49,6 +47,16 @@ unsigned char** matrix_init(int of) {
 	}
 
 	return matrix;
+}
+
+void copy(unsigned char** m1, unsigned char** m2) {
+
+	int i, j;
+	for(i=0; i<MAX_ROWS; i++) {
+		for(j=0; j<MAX_COLUMNS; j++) {
+			m1[i][j] = m2[i][j];
+		}
+	}
 }
 
 void copy_offset(unsigned char** m1, unsigned char** m2) {

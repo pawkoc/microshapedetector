@@ -224,7 +224,7 @@ int saveAsBitmap(int header_size, unsigned char *header, unsigned char **bmpData
     unsigned char *tmp;
     int i, j, p, tmp_s;
 
-    filePtr = fopen("output_file.bmp", "wb");
+    filePtr = fopen("output_file_gimp.bmp", "wb");
     if(fwrite(header, 1, header_size, filePtr)==0) return 1;
 
     tmp_s = width*3;//+2;
