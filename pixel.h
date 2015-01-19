@@ -24,6 +24,7 @@ typedef struct List {
 
 List* init_list();
 void add_first(List* list, int x, int y);
+void add_sort(List* list, int x, int y);
 void print_list(List* head);
 
 #endif /* PIXEL_H_ */

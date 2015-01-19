@@ -224,7 +224,7 @@ int saveAsBitmap(int header_size, unsigned char *header, unsigned char **bmpData
     unsigned char *tmp;
     int i, j, p, tmp_s;
 
-    filePtr = fopen("output_file_gimp.bmp", "wb");
+    filePtr = fopen("save_as_bitmap.bmp", "wb");
     if(fwrite(header, 1, header_size, filePtr)==0) return 1;
 
     tmp_s = width*3;//+2;
@@ -397,7 +397,7 @@ void drawPart(unsigned char *buffer, int x0, int y0, int a, int b, int hw, int w
 	}
 }
 
-int drawEllipse(char *filename, int x0, int y0, int a, int b, int width, int hight) {
+int drawEllipse(char *filename, int x0, int y0, int a, int b, int width, int hight, unsigned char** sobel_out) {
 
     FILE *filePtr;
     unsigned char *buffer;
