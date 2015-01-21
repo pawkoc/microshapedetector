@@ -103,7 +103,7 @@ unsigned char** sobel(unsigned char** matrix) {
 
 	for(i=0; i<MAX_ROWS; i++) {
 		for(j=0; j<MAX_COLUMNS; j++) {
-			if(output[i][j] < 50) {
+			if(output[i][j] < 255) {
 				output[i][j] = 0;
 			} else {
 				output[i][j] = 255;

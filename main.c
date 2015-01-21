@@ -53,6 +53,10 @@ int main(int argc, char **argv) {
     unsigned char** out2 = sobel(bmpData);
     out = thin2(bmpData, 512, 512);
 
+    int** hough1 = hough(out, 512, 512, 40.);
+
+    unsigned char** out3 = thin2(bmpData, 512, 512);
+
     if(header) saveAsBitmap(header_size, header, out, width, height);
 ////    out = sobel(out);
 //
@@ -73,8 +77,6 @@ int main(int argc, char **argv) {
 //    printf("detekcja elips\n");
 //
 detect_ellipses(out, 512, 512, 35., 0.);
-
-drawLine("output_ellipse.bmp", 10, 60, 512, 512);
 
 //
 //    detect_with_start_end(out, 2, 2, 2, 6);

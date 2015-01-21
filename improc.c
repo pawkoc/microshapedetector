@@ -257,7 +257,23 @@ void point(unsigned char *buffer, int h, int bs) {
     }
 }
 
-int drawLine(char *filename, int dist, int angle, int width, int hight) {
+int surr(unsigned char** sobel_output, int w, int h, int a, int b, int tmp) {
+
+	int i, j;
+	for(i=-tmp; i<=tmp; i++) {
+		for(j=-tmp; j<=tmp; j++) {
+			if((a+i) >=0 && (a+i) < w && (b+j) >= 0 && (b+j) < h) {
+				if(sobel_output[a+i][b+j] > 0) {
+					return 1;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned char** sobel_output) {
 
     FILE *filePtr;
     unsigned char *buffer;
@@ -282,34 +298,32 @@ int drawLine(char *filename, int dist, int angle, int width, int hight) {
 
         w2 = width/2;
         h2 = hight/2;
-        if(angle == 90) {
-            dist += w2;
-            for(w = 0; w < hight; w++) {
-                h = dist+w*width;
-                point(buffer, h, bs);
-            }
-        }
-        else if(angle == 0 || angle == 180) {
-            dist += h2;
-            for(w = 0; w < width; w++) {
-                h = dist*width+w;
-                point(buffer, h, bs);
-            }
-        }
-        else if(angle > 45 && angle < 135) {
+
+        int tmp;
+
+        if(angle > 45 && angle < 135) {
             c = im_rad * angle;
             s = cos(c) / sin(c);
             c = dist / sin(c) - w2;
             for(w = 0; w < h2; w++) {
                 h = s*w-c;
                 if(h >= 0 && h < width) {
-                    h += (w+h2)*width;
-                    point(buffer, h, bs);
+
+                	tmp = h;
+                	h += (w+h2)*width;
+//                	if(sobel_output[w+w2][tmp] >0) {
+					if(surr(sobel_output, width, hight, (w+w2), tmp, 1)) {
+                		point(buffer, h, bs);
+                	}
                 }
                 h = -s*w-c;
                 if(h >= 0 && h < width) {
-                    h -= (w-h2)*width;
-                    point(buffer, h, bs);
+                	tmp = h;
+						h -= (w-h2)*width;
+//                	if(sobel_output[w2-w][tmp+1] >0) {
+					if(surr(sobel_output, width, hight, (w2-w), tmp, 1)) {
+						point(buffer, h, bs);
+                	}
                 }
             }
         }
@@ -320,14 +334,20 @@ int drawLine(char *filename, int dist, int angle, int width, int hight) {
             for(w = 0; w < w2; w++) {
                 h = s*w+c;
                 if(h >= 0 && h < hight) {
-                    h = h*width+w+w2;
-                    point(buffer, h, bs);
+
+                	tmp = h;
+                	h = h*width+w+w2;
+                	if(surr(sobel_output, width, hight, (w2-w), h, 2))
+                	point(buffer, h, bs);
                 }
-                h = -s*w+c;
-                if(h >=0 && h < hight) {
-                    h = h*width-w+w2;
-                    point(buffer, h, bs);
-                }
+//                h = -s*w+c;
+//                if(h >=0 && h < hight) {
+//
+//                	tmp = h;
+//                	h = h*width-w+w2;
+////                    if(sobel_output[w2-w][tmp+1] >0)
+//                    point(buffer, h, bs);
+//                }
             }
         }
 
@@ -397,7 +417,7 @@ void drawPart(unsigned char *buffer, int x0, int y0, int a, int b, int hw, int w
 	}
 }
 
-int drawEllipse(char *filename, int x0, int y0, int a, int b, int width, int hight, unsigned char** sobel_out) {
+int drawEllipse(char *filename, int x0, int y0, int a, int b, int width, int hight) {
 
     FILE *filePtr;
     unsigned char *buffer;
