@@ -27,7 +27,8 @@ List* get_pixels(unsigned char** sobel_output, int w, int h) {
 	for(i=0; i<w; i++) {
 		for(j=0; j<h; j++) {
 			if(sobel_output[i][j] > 250) {
-				add_sort(list, i, j);
+				if(!(i<10 || j<10 || i>500 || j>500))
+					add_sort(list, i, j);
 			}
 		}
 	}
@@ -49,7 +50,8 @@ void detect_with_start_end(unsigned char** out, double start_x, double start_y, 
 
 				if(!(start_x == i) && !(start_y == j)) {
 					if(!(end_x == i) && !(end_y == j)) {
-						add_first(pixels, i, j);
+						if(!(i==0 || j==0))
+							add_first(pixels, i, j);
 					}
 				}
 			}
@@ -288,11 +290,11 @@ if(INODEX == JNODEX) {
 				double obwod;
 
 				if(abs(a-max_acc) < 4)
-					obwod = M_PI*a*5/6;
+					obwod = M_PI*a*2/3;
 				else
-					obwod = M_PI*(3/2 * (a+max_acc) - sqrt(a*max_acc))*18/19;
+					obwod = M_PI*(3/2 * (a+max_acc) - sqrt(a*max_acc))*6/7;
 
-				if(max_wart >= obwod*2/5 && max_wart >= threshold && max_wart>0 && (int)max_acc>3) {
+				if(max_wart >= obwod*4/5 && max_wart >= threshold && max_wart>0 && (int)max_acc>10) {
 					printf("ELLIPSE FOUND!! %d %d %d %d\n", 512-(int)center_x, (int)center_y, (int)a, (int)max_acc);
 					printf("(%d, %d), (%d, %d)\n\n", 512-INODEX, INODEY, 512-JNODEX, JNODEY);
 

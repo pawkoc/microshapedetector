@@ -312,7 +312,7 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
                 	tmp = h;
                 	h += (w+h2)*width;
 //                	if(sobel_output[w+w2][tmp] >0) {
-					if(surr(sobel_output, width, hight, (w+w2), tmp, 1)) {
+					if(surr(sobel_output, width, hight, (w+h2), tmp, 1)) {
                 		point(buffer, h, bs);
                 	}
                 }
@@ -321,7 +321,7 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
                 	tmp = h;
 						h -= (w-h2)*width;
 //                	if(sobel_output[w2-w][tmp+1] >0) {
-					if(surr(sobel_output, width, hight, (w2-w), tmp, 1)) {
+					if(surr(sobel_output, width, hight, (h2-w), tmp, 1)) {
 						point(buffer, h, bs);
                 	}
                 }
@@ -337,17 +337,17 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
 
                 	tmp = h;
                 	h = h*width+w+w2;
-                	if(surr(sobel_output, width, hight, (w2-w), h, 2))
+                	if(surr(sobel_output, width, hight, tmp, (w+w2), 1))
                 	point(buffer, h, bs);
                 }
-//                h = -s*w+c;
-//                if(h >=0 && h < hight) {
-//
-//                	tmp = h;
-//                	h = h*width-w+w2;
-////                    if(sobel_output[w2-w][tmp+1] >0)
-//                    point(buffer, h, bs);
-//                }
+                h = -s*w+c;
+                if(h >=0 && h < hight) {
+
+                	tmp = h;
+                	h = h*width-w+w2;
+                    if(surr(sobel_output, width, hight, tmp, (-w+w2), 1))
+                    point(buffer, h, bs);
+                }
             }
         }
 

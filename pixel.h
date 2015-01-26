@@ -13,6 +13,7 @@ typedef struct Pixel {
 typedef struct Node {
 
 	Pixel* pixel;
+	double b_ellipse;
 	struct Node* next;
 }Node;
 

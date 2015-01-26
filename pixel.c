@@ -19,6 +19,8 @@ void add_first(List* list, int x, int y) {
 	Node* new_node = malloc(sizeof(Node));
 
 	new_node->pixel = new_pixel;
+	new_node->b_ellipse = 0.;
+
 	new_node->next = list->head;
 	list->head = new_node;
 
@@ -34,6 +36,7 @@ void add_sort(List* list, int x, int y) {
 	Node* new_node = malloc(sizeof(Node));
 
 	new_node->pixel = new_pixel;
+	new_node->b_ellipse = 0.;
 
 	list->size++;
 
@@ -91,7 +94,7 @@ void print_list(List* list) {
 	Node* head = list->head;
 
 	while(head) {
-		printf("(%d, %d) ", head->pixel->x, head->pixel->y);
+		printf("(%d, %d) / %lf ", head->pixel->x, head->pixel->y, head->b_ellipse);
 		head = head->next;
 	}
 

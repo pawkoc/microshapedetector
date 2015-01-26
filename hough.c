@@ -4,7 +4,7 @@
 
 int local_maxima(int** tab, int w, int h, int val, int a, int b) {
 
-	int i, j, max=0, tmp=10;
+	int i, j, max=0, tmp=5;
 	for(i=-tmp; i<=tmp; i++) {
 		for(j=-tmp-10; j<=tmp+10; j++) {
 
