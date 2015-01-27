@@ -78,8 +78,8 @@ unsigned char** sobel(unsigned char** matrix) {
 
 	copy_offset(copy_with_offset, matrix);
 
-	for(i=1; i<=MAX_ROWS; i++) {
-		for(j=1; j<=MAX_COLUMNS; j++) {
+	for(i=1; i<MAX_ROWS; i++) {
+		for(j=1; j<MAX_COLUMNS; j++) {
 
 			sumX = sumY = 0;
 			for(k=-1; k<=1; k++) {

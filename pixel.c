@@ -10,7 +10,7 @@ List* init_list() {
 	return list;
 }
 
-void add_first(List* list, int x, int y) {
+void add_first(List* list, int x, int y, double val) {
 
 	Pixel* new_pixel = malloc(sizeof(Pixel));
 	new_pixel->x = x;
@@ -19,7 +19,7 @@ void add_first(List* list, int x, int y) {
 	Node* new_node = malloc(sizeof(Node));
 
 	new_node->pixel = new_pixel;
-	new_node->b_ellipse = 0.;
+	new_node->b_ellipse = val;
 
 	new_node->next = list->head;
 	list->head = new_node;
@@ -94,9 +94,35 @@ void print_list(List* list) {
 	Node* head = list->head;
 
 	while(head) {
-		printf("(%d, %d) / %lf ", head->pixel->x, head->pixel->y, head->b_ellipse);
+		printf("(%d, %d) ", head->pixel->x, head->pixel->y);
 		head = head->next;
 	}
 
 	printf("\n");
+}
+
+void removeEllipseFromImage(Node* start, Node* end, double val) {
+
+	Node* prev = start;
+	Node* tmp;
+	double min, max;
+	printf("start: (%d, %d), end: (%d, %d)\n", start->pixel->x, start->pixel->y, end->pixel->x, end->pixel->y);
+
+	for(start = start->next; start != end;) {
+
+		if((((start->b_ellipse - val) >= 0.) && (start->b_ellipse - val) < 0.0000001) || (((start->b_ellipse - val) <= 0.) &&(start->b_ellipse - val) > -0.0000001)) {
+
+//			printf("prev: (%d, %d), dif = %lf\n", prev->pixel->x, prev->pixel->y, (start->b_ellipse - val));
+			prev->next = start->next;
+
+			tmp = start;
+			start = start->next;
+			tmp->next = NULL;
+
+			free(tmp);
+		} else {
+			start = start->next;
+			prev = prev->next;
+		}
+	}
 }

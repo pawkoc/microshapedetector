@@ -273,7 +273,7 @@ int surr(unsigned char** sobel_output, int w, int h, int a, int b, int tmp) {
 	return 0;
 }
 
-int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned char** sobel_output) {
+int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned char** sobel_output, Segment* segment) {
 
     FILE *filePtr;
     unsigned char *buffer;
@@ -286,6 +286,10 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
 
     header = getHeader(filename, &header_size);
     lhs = header_size;
+
+
+    Pixel* start = NULL;
+    Pixel* end = malloc(sizeof(Pixel));
 
     if(header) {
         filePtr = fopen(filename, "rb+");
@@ -302,7 +306,7 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
         int tmp;
 
         if(angle > 45 && angle < 135) {
-            c = im_rad * angle;
+        	c = im_rad * angle;
             s = cos(c) / sin(c);
             c = dist / sin(c) - w2;
             for(w = 0; w < h2; w++) {
@@ -311,17 +315,45 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
 
                 	tmp = h;
                 	h += (w+h2)*width;
-//                	if(sobel_output[w+w2][tmp] >0) {
 					if(surr(sobel_output, width, hight, (w+h2), tmp, 1)) {
-                		point(buffer, h, bs);
+						if(start == NULL) {
+
+							start = malloc(sizeof(Pixel));
+
+							start->x = (w+h2);
+							start->y = tmp;
+						}
+
+						if(tmp > 5 && tmp < 509 && (w+h2) > 5 && (w+h2) < 509) {
+							end->x = (w+h2);
+							end->y = tmp;
+						}
+
+						sobel_output[w+h2][tmp] = 0;
+
+						point(buffer, h, bs);
                 	}
                 }
                 h = -s*w-c;
                 if(h >= 0 && h < width) {
                 	tmp = h;
 						h -= (w-h2)*width;
-//                	if(sobel_output[w2-w][tmp+1] >0) {
 					if(surr(sobel_output, width, hight, (h2-w), tmp, 1)) {
+						if(start == NULL) {
+
+							start = malloc(sizeof(Pixel));
+
+							start->x = (h2-w);
+							start->y = tmp;
+						}
+
+						if(tmp > 5 && tmp < 509 && (h2-w) > 5 && (h2-w) < 509) {
+							end->x = (h2-w);
+							end->y = tmp;
+						}
+
+						sobel_output[h2-w][tmp] = 0;
+
 						point(buffer, h, bs);
                 	}
                 }
@@ -334,19 +366,51 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
             for(w = 0; w < w2; w++) {
                 h = s*w+c;
                 if(h >= 0 && h < hight) {
-
                 	tmp = h;
                 	h = h*width+w+w2;
-                	if(surr(sobel_output, width, hight, tmp, (w+w2), 1))
-                	point(buffer, h, bs);
+                	if(surr(sobel_output, width, hight, tmp, (w+w2), 1)) {
+						if(start == NULL) {
+
+							start = malloc(sizeof(Pixel));
+
+							start->x = tmp;
+							start->y = (w+w2);
+						}
+
+						if((w+w2) > 5 && (w+w2) < 509 && tmp > 5 && tmp < 509) {
+							end->x = tmp;
+							end->y = (w+w2);
+						}
+
+						sobel_output[tmp][w+w2] = 0;
+
+                		point(buffer, h, bs);
+                	}
                 }
                 h = -s*w+c;
                 if(h >=0 && h < hight) {
 
                 	tmp = h;
                 	h = h*width-w+w2;
-                    if(surr(sobel_output, width, hight, tmp, (-w+w2), 1))
-                    point(buffer, h, bs);
+                    if(surr(sobel_output, width, hight, tmp, (-w+w2), 1)) {
+
+						if(start == NULL) {
+
+							start = malloc(sizeof(Pixel));
+
+							start->x = tmp;
+							start->y = (-w+w2);
+						}
+
+						if((-w+w2) > 5 && (-w+w2) < 509 && tmp > 5 && tmp < 509) {
+							end->x = tmp;
+							end->y = (-w+w2);
+						}
+
+						sobel_output[tmp][-w+w2] = 0;
+
+                    	point(buffer, h, bs);
+                    }
                 }
             }
         }
@@ -358,6 +422,16 @@ int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned
         fclose(filePtr);
     }
     else return 1;
+
+    if(start != NULL && end != NULL) {
+
+    	segment->start = start;
+    	segment->end = end;
+
+    } else {
+    	segment->start = NULL;
+    }
+
 
     free(header);
 

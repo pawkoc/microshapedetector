@@ -1,7 +1,6 @@
 #include "sobel.h"
 #include "improc.h"
 #include "hough.h"
-#include "circles.h"
 #include "impreproc.h"
 #include "pixel.h"
 #include "ellipses.h"
@@ -22,7 +21,7 @@ int main(int argc, char **argv) {
     unsigned char *header;
     int header_size, width, height;
 
-    char* name = "kostka.bmp";
+    char* name = "test_data_gimp.bmp";
 
     bmpData = packed_function(name, &width, &height);
 
@@ -42,7 +41,7 @@ int main(int argc, char **argv) {
 //
 ////    drawCircle("bialy2.bmp", 128, 128, 30, 512, 512);
 //
-//    unsigned char** out;
+    unsigned char** out;
 ////    out = wynik;
 ////    out = bmpData;
 ////    out = (unsigned char**)wynik_hough;
@@ -51,17 +50,19 @@ int main(int argc, char **argv) {
 
 //    if(header) saveAsBitmap(header_size, header, out2, width, height);
 
-//    unsigned char** out2 = sobel(bmpData);
+    unsigned char** out2 = sobel(bmpData);
 //    out = thin2(out2, 512, 512);
 
 
+    int** hough1 = hough(out2, 512, 512, 130.);
 
+    EllipseList* ellipses = init_ellipse_list();
 
+//    detect_ellipses(out2, 512, 512, 70., 10., ellipses);
 
-//    int** hough1 = hough(out2, 512, 512, 450.);
+//    print_ellipse_list(ellipses);
 
-//    detect_ellipses(out2, 512, 512, 50., 0.);
-
+    printf("Terminated\n");
 //    unsigned char** out3 = thin2(bmpData, 512, 512);
 
 
@@ -100,24 +101,42 @@ int main(int argc, char **argv) {
 
 
 
-    Graph* g = init_graph(4);
+//    Graph* g = init_graph(4);
+//
+//    add_edge(g, 0, 1, 1);
+//    add_edge(g, 0, 2, 2);
+//    add_edge(g, 1, 3, 10);
+//    add_edge(g, 2, 3, 2);
+//    add_edge(g, 0, 3, 2);
+//
+//    print_graph(g);
+//
+//    for(i=0; i<g->vertices_count; i++) {
+//    	for(j=0; j<=i; j++)
+//    		printf("%d ", g->matrix[i][j]);
+//    	printf("\n");
+//    }
+//
+//
+//    Floyd_Warshall(g);
 
-    add_edge(g, 0, 1, 1);
-    add_edge(g, 0, 2, 2);
-    add_edge(g, 1, 3, 10);
-    add_edge(g, 2, 3, 2);
-    add_edge(g, 0, 3, 2);
 
-    print_graph(g);
-
-    for(i=0; i<g->vertices_count; i++) {
-    	for(j=0; j<=i; j++)
-    		printf("%d ", g->matrix[i][j]);
-    	printf("\n");
-    }
-
-
-    Floyd_Warshall(g);
+//    List* l = init_list();
+//
+//    add_first(l, 2, 3, 1.);
+//
+//    Node* end = l->head;
+//
+//    add_first(l, 3, 4, 0.);
+//    add_first(l, 0, 4, 1.);
+//    add_first(l, 2, 2, 0.);
+//    add_first(l, 3, 5, 1.);
+//
+//    print_list(l);
+//
+//    removeEllipseFromImage(l->head, end, 1.0);
+//
+//    print_list(l);
 //    clear_2(wynik, 512);
 //    clear_2(wynik_hough, 512);
 //    clear_3(wynik_hough_circle, 512, 512);

@@ -24,8 +24,9 @@ typedef struct List {
 }List;
 
 List* init_list();
-void add_first(List* list, int x, int y);
+void add_first(List* list, int x, int y, double val);
 void add_sort(List* list, int x, int y);
 void print_list(List* head);
+void removeEllipseFromImage(Node* start, Node* end, double val);
 
 #endif /* PIXEL_H_ */

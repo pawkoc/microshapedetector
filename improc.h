@@ -4,6 +4,9 @@ typedef unsigned int DWORD;
 typedef int LONG;
 #endif
 
+#include "segment.h"
+#include "pixel.h"
+
 #ifndef IMPROC_H_
 #define IMPROC_H_
 
@@ -41,7 +44,7 @@ unsigned char **convertBitmapData(unsigned char *bitmapData,LONG width,LONG heig
 unsigned char **packed_function(char *filename, int *width, int *height);
 unsigned char *getHeader(char *filename, int *header_size);
 int saveAsBitmap(int header_size, unsigned char *header, unsigned char **bmpData, int width, int height);
-int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned char** sobel_output);
+int drawLine(char *filename, int dist, int angle, int width, int hight, unsigned char** sobel_output, Segment* segment);
 int drawCircle(char *filename, int x0, int y0, int r, int width, int hight);
 int drawEllipse(char *filename, int x0, int y0, int a, int b, int width, int hight);
 #endif

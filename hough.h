@@ -6,6 +6,9 @@
 #define M_PI 3.1415
 #endif
 
+#include "segment.h"
+#include "pixel.h"
+
 #define MIN(X,Y) (X)<(Y)?(X):(Y)
 
 #define DEG2RAD ((M_PI)/(180.0))

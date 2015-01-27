@@ -59,8 +59,8 @@ int** hough(unsigned char** sobel_output, int w, int h, double threshold) {
 	printf("accu_w: %d, accu_h: %d\n", _accu_w, _accu_r);
 
 	int x, y, t;
-	for (x = 0; x < w; x++) {
-		for (y = 0; y < h; y++) {
+	for (x = 5; x < w-5; x++) {
+		for (y = 5; y < h-5; y++) {
 			if ((int) sobel_output[x][y] > 240) {
 
 				for (t = 0; t < 180; t++) {
@@ -86,6 +86,11 @@ int** hough(unsigned char** sobel_output, int w, int h, double threshold) {
 		}
 	}
 
+
+	Segment* segment = malloc(sizeof(Segment));
+
+	SegmentList* segment_list = init_segment_list();
+
 	for(i=0; i<_accu_r; i++) {
 		for(j=0; j<_accu_w; j++){
 			if(_accu[i][j] > threshold) {
@@ -103,11 +108,24 @@ int** hough(unsigned char** sobel_output, int w, int h, double threshold) {
 
 					double x = (c*c - i*i - b_kw)/(2*i);
 
-					drawLine("output_ellipse.bmp", x+_accu_rr, j+90, 512, 512, sobel_output);
+					drawLine("output_ellipse.bmp", x+_accu_rr, j+90, 512, 512, sobel_output, segment);
+
+					if(segment->start != NULL) {
+						printf("SEGMENT: (%d, %d) -> (%d, %d)\n", segment->start->x, segment->start->y,
+								segment->end->x, segment->end->y);
+
+						add_first_segment(segment_list, segment);
+
+						segment = malloc(sizeof(Segment));
+					}
 				}
 			}
 		}
 	}
+
+	print_segment_list(segment_list);
+
+	get_all_intersection_pixels(segment_list);
 
 	return _accu;
 }
