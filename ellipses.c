@@ -145,7 +145,7 @@ if(INODEX == JNODEX) {
 				if(abs(a-max_acc) < 4)
 					obwod = M_PI*a*2/3;
 				else
-					obwod = M_PI*(3/2 * (a+max_acc) - sqrt(a*max_acc))*16/17;
+					obwod = M_PI*(3/2 * (a+max_acc) - sqrt(a*max_acc))*1/2;
 
 				if(max_wart >= obwod*4/5 && max_wart >= threshold && max_wart>0 && (int)max_acc>10) {
 //					printf("ELLIPSE FOUND!! %d %d %d %d\n", 512-(int)center_x, (int)center_y, (int)a, (int)max_acc);
